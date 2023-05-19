@@ -1,0 +1,54 @@
+package accountManagement
+public
+	system accountMan
+		features
+			getRequest : in data port;
+			sendReply : out data port;
+	end accountMan;
+	
+	system login
+		features
+			getUsername : in data port;
+			getPassword : in data port;
+			sendReply : out data port;
+	end login;
+	
+	system personalInfo
+		features
+			getAddress : in data port;
+			getTelephone : in data port;
+			getName : in data port;
+			getEmail : in data port;
+			sendReply : out data port;
+	end personalInfo;
+	
+	system cardInfo
+		features
+			getCVV : in data port;
+			getCardNum : in data port;
+			getBankType : in data port;
+			sendInfo : out data port;
+			sendVerificationCode : out data port;
+	end cardInfo;
+	
+	system implementation accountMan.Impl
+		subcomponents
+			log : system login;
+			persInf : system personalInfo;
+			cardInf : system cardInfo;
+		connections
+			conn1 : port log.sendReply -> log.getUsername;
+			conn2: port log.sendReply -> log.getPassword;
+			conn3: port persInf.sendReply -> persInf.getAddress;
+			conn4: port persInf.sendReply -> persInf.getTelephone;
+			conn5: port persInf.sendReply -> persInf.getName;
+			conn6: port persInf.sendReply -> persInf.getEmail;
+			conn7: port cardInf.sendInfo -> cardInf.getCVV;
+			conn8: port cardInf.sendInfo -> cardInf.getCardNum;
+			conn9: port cardInf.sendInfo -> cardInf.getBankType;
+			conn10: port cardInf.sendVerificationCode -> cardInf.getCVV;
+			
+			
+	end accountMan.Impl;
+end accountManagement;
+
