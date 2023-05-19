@@ -1,0 +1,74 @@
+package customerSupport
+public
+	system cusSupChat
+		features
+			getRequest : in data port;
+			sendReply : out data port;
+	end cusSupChat;
+	
+	system ProductInfo
+		features
+			getpName : in data port;
+			getpID : in data port;
+			sendProductInfo : out data port;
+	end ProductInfo;
+	
+	system seller
+		features
+			getsellerName : in data port;
+			getsellerAddress : in data port;
+			getsellerPhone : in data port;
+			sendSellerInfo : out data port;
+	end seller;
+	
+	system customer
+		features
+			getCustomerName : in data port;
+			getCustomerAddress : in data port;
+			getCustomerPhone : in data port;
+			sendCustomerInfo : out data port;
+	end customer;
+	
+	system CustSupport
+		features
+			getCSID : in data port;
+			getCSName : in data port;
+			sendCSInfo : out data port;
+	end CustSupport;
+	
+	system implementation cusSupChat.Impl
+		subcomponents
+			p : system ProductInfo;
+			s : system seller;
+			c : system customer;
+			cs : system CustSupport;
+		connections
+			conn1 : port p.sendProductInfo -> s.getsellerName;
+			conn2 : port p.sendProductInfo -> s.getsellerAddress;
+			conn3 : port p.sendProductInfo -> s.getsellerPhone;
+			conn4 : port p.sendProductInfo -> c.getCustomerName;
+			conn5 : port p.sendProductInfo -> c.getCustomerAddress;
+			conn6 : port p.sendProductInfo -> c.getCustomerPhone;
+			conn7 : port p.sendProductInfo -> cs.getCSID;
+			conn8 : port p.sendProductInfo -> cs.getCSName;
+			conn9 : port s.sendSellerInfo -> c.getCustomerName;
+			conn10 : port s.sendSellerInfo -> c.getCustomerAddress;
+			conn11 : port s.sendSellerInfo -> c.getCustomerPhone;
+			conn12 : port s.sendSellerInfo -> cs.getCSID;
+			conn13 : port s.sendSellerInfo -> cs.getCSName;
+			conn14 : port cs.sendCSInfo -> c.getCustomerName;
+			conn15 : port cs.sendCSInfo -> c.getCustomerAddress;
+			conn16 : port cs.sendCSInfo -> c.getCustomerPhone;
+			conn17 : port cs.sendCSInfo -> s.getsellerName;
+			conn18 : port cs.sendCSInfo -> s.getsellerAddress;
+			conn19 : port cs.sendCSInfo -> s.getsellerPhone;
+			conn20 : port c.sendCustomerInfo -> cs.getCSID;
+			conn21 : port c.sendCustomerInfo -> cs.getCSName;
+			conn22 : port c.sendCustomerInfo -> s.getsellerName;
+			conn23 : port c.sendCustomerInfo -> s.getsellerAddress;
+			conn24 : port c.sendCustomerInfo -> s.getsellerPhone;
+			
+		
+	end cusSupChat.Impl;
+			
+end customerSupport;
