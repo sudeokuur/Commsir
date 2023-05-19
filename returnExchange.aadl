@@ -1,0 +1,70 @@
+package returnexchange
+public
+	system returnandExchange
+		features
+			getRequest : in data port;
+			sendReply : out data port;
+	end returnandExchange;
+	
+	system deliveryComp
+		features
+			compName : in data port;
+			compAddress : in data port;
+			compPhone : in data port;
+			sendCompInfo : out data port;
+	end deliveryComp;
+	
+	system creditCard
+		features
+			cardOwner : in data port;
+			cardNum : in data port;
+			cardCVV : in data port;
+			sendCardInfo : out data port;
+	end creditCard;
+	
+	system seller
+		features
+			sellerName : in data port;
+			sellerPhone : in data port;
+			sellerAddress : in data port;
+			sendSellerInfo : out data port;
+	end seller;
+	
+	system customer
+		features
+			customerName : in data port;
+			customerPhone : in data port;
+			customerAddress : in data port;
+			sendCustomerInfo : out data port;
+	end customer;
+	
+	system product
+		features
+			productName : in data port;
+			productID : in data port;
+			sendProductInfo : out data port;
+	end product;
+	
+	system implementation returnandExchange.Impl
+		subcomponents
+			d : system deliveryComp;
+			c : system creditCard;
+			s : system seller;
+			cus : system customer;
+			p : system product;
+		connections
+			conn1 : port d.sendCompInfo -> s.sellerName;
+			conn2 : port d.sendCompInfo -> s.sellerPhone;
+			conn3 : port d.sendCompInfo -> s.sellerAddress;
+			conn4 : port p.sendProductInfo -> d.compName;
+			conn5 : port p.sendProductInfo -> d.compAddress;
+			conn6 : port p.sendProductInfo -> d.compPhone;
+			conn7 : port cus.sendCustomerInfo -> d.compName;
+			conn8 : port cus.sendCustomerInfo -> d.compAddress;
+			conn9 : port cus.sendCustomerInfo -> d.compPhone;
+			conn10 : port s.sendSellerInfo -> d.compName;
+			conn11 : port s.sendSellerInfo -> d.compAddress;
+			conn12 : port s.sendSellerInfo -> d.compPhone;
+			
+	end returnandExchange.Impl;
+end returnexchange;
