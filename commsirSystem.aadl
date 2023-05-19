@@ -1,0 +1,98 @@
+package Commsir
+public
+	
+	with payment;
+	with returnexchange;
+	with accountManagement;
+	with customerSupport;
+	
+	system webserver
+		features
+			getRequest : in data port;
+			sendReply : out data port;
+			checkHealth : in data port;
+			sendHealth : out data port;
+	end webserver;
+	
+	system monitoringServer
+		features
+			receiveHealth : in data port;
+	end monitoringServer;
+	
+	system implementation webserver.Impl
+		subcomponents
+			PM : system payment::PaymentEnv.Impl;
+			RE : system returnexchange::returnandExchange.Impl;
+			AC : system accountManagement::accountMan.Impl;
+			CS : system customerSupport::cusSupChat.Impl;
+		connections
+			conn1 : port getRequest -> PM.getRequest;
+			conn2 : port PM.sendReply -> sendReply;
+			conn3 : port getRequest -> RE.getRequest;
+			conn4 : port RE.sendReply -> sendReply;
+			conn5 : port getRequest -> AC.getRequest;
+			conn6 : port AC.sendReply -> sendReply;
+			conn7 : port getRequest -> CS.getRequest;
+			conn8 : port CS.sendReply -> sendReply;		
+	end webserver.Impl;
+	
+	system redundantWS
+		features
+			getRequest : in data port;
+			sendReply : out data port;
+			checkStatus : in data port;
+			sendStatus : out data port;
+	end redundantWS;
+	
+		system implementation redundantWS.Impl
+		subcomponents
+			PM : system payment::PaymentEnv.Impl;
+			RE : system returnexchange::returnandExchange.Impl;
+			AC : system accountManagement::accountMan.Impl;
+			CS : system customerSupport::cusSupChat.Impl;
+		connections
+			conn1 : port getRequest -> PM.getRequest;
+			conn2 : port PM.sendReply -> sendReply;
+			conn3 : port getRequest -> RE.getRequest;
+			conn4 : port RE.sendReply -> sendReply;
+			conn5 : port getRequest -> AC.getRequest;
+			conn6 : port AC.sendReply -> sendReply;
+			conn7 : port getRequest -> CS.getRequest;
+			conn8 : port CS.sendReply -> sendReply;		
+	end redundantWS.Impl;
+	
+	system monitoringComponent
+		features
+			receiveHealth : in data port;
+	end monitoringComponent;
+	
+	system implementation monitoringServer.Impl
+		subcomponents
+			MC : system monitoringComponent;
+		connections
+			conn1 : port receiveHealth -> MC.receiveHealth;
+	end monitoringServer.Impl;
+	
+	system SQLServer
+		
+	end SQLServer;
+	
+	system commsirApplication
+		features
+			getRequest : in data port;
+			sendReply : out data port;
+	end commsirApplication;
+	
+	system implementation commsirApplication.Impl
+		subcomponents
+			WS : system webserver.Impl;
+			MS : system monitoringServer.Impl;
+			RS : system redundantWS.Impl;
+			DB : system SQLServer;
+		connections
+			conn1 : port WS.sendHealth -> MS.receiveHealth;
+			conn2 : port getRequest -> WS.getRequest;
+			conn3 : port WS.sendReply -> sendReply;
+			
+	end commsirApplication.Impl;
+end Commsir;
