@@ -1,0 +1,60 @@
+package payment
+public
+	system PaymentEnv
+		features
+			getRequest : in data port;
+			sendReply : out data port;
+	end PaymentEnv;
+	
+	system creditCard
+		features
+			cardOwner : in data port;
+			cardNum : in data port;
+			cardCVV : in data port;
+			sendCardInfo : out data port;
+	end creditCard;
+	
+	system customer
+		features
+			customerName : in data port;
+			customerID : in data port;
+			sendCustomerInfo : out data port;
+	end customer;
+	
+	system product
+		features
+			productName : in data port;
+			productID : in data port;
+			sendProductInfo : out data port;
+	end product;
+	
+	system tDsecure
+		features
+			paypal : in data port;
+			visa : in data port;
+			mastercard : in data port;
+			sendThreeDInfo : out data port;
+	end tDsecure;
+	
+	system implementation PaymentEnv.Impl
+		subcomponents
+			c : system creditCard;
+			cus : system customer;
+			p : system product;
+			t : system tDsecure;
+		connections
+			conn1 : port c.sendCardInfo -> t.paypal;
+			conn2 : port c.sendCardInfo -> t.visa;
+			conn3 : port c.sendCardInfo -> t.mastercard;
+			conn4 : port p.sendProductInfo -> cus.customerName;
+			conn5 : port p.sendProductInfo -> cus.customerID;
+			conn6 : port cus.sendCustomerInfo -> c.cardOwner;
+			conn7 : port cus.sendCustomerInfo -> c.cardNum;
+			conn8 : port cus.sendCustomerInfo -> c.cardCVV;
+			conn9 : port t.sendThreeDInfo -> c.cardOwner;
+			conn10 : port t.sendThreeDInfo -> c.cardNum;
+			conn11 : port t.sendThreeDInfo -> c.cardCVV;
+			
+	end PaymentEnv.Impl;
+	
+end payment;
